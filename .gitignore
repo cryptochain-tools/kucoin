@@ -34,3 +34,5 @@ npm-debug.log*
 /electron
 
 node_modules
+precode
+/test/api-keys.ts
