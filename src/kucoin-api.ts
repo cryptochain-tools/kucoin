@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { createHmac } from 'crypto';
 
-import { KucoinApiOptions, KucoinApiResquestOptions, KucoinMarketType } from './types/kucoin.types';
+import { KucoinApiOptions, KucoinApiResquestOptions, KucoinMarketType, KucoinWebsocketTokenResponse } from './types/kucoin.types';
 
 
 
@@ -145,8 +145,9 @@ export abstract class KucoinApi {
     const authVersion: any = 2;
     const timestamp = Date.now() + '';
     // const message = timestamp + method.toUpperCase() + endpoint + data;
-    const data = (method === 'GET' || method === 'DELETE') ? this.formatQuery(params) : JSON.stringify(params);
+    const data = (method === 'GET' || method === 'DELETE') ? this.formatQuery(params) : JSON.stringify(params).slice(1, -1);
     const message = timestamp + method + endpoint + data;
+    // console.log('message =>', message);
     const signature = await this.signMessage(message, apiSecret);
     const headers: { [header: string]: number | string } = {
       // 'User-Agent': `KuCoin-Node-SDK/${version}`,
@@ -216,7 +217,20 @@ export abstract class KucoinApi {
       headers: response.headers,
       requestUrl: url,
       requestBody: request.body,
-      requestOptions: { ...this.options },
+      options: { ...this.options },
     };
   }
+
+  
+  // ---------------------------------------------------------------------------------------------------
+  //  Websocket token
+  // ---------------------------------------------------------------------------------------------------
+
+  /** {@link https://docs.kucoin.com/#apply-connect-token Apply connect token} */
+  async getWebsocketToken(access: 'public' | 'private'): Promise<KucoinWebsocketTokenResponse> {
+    const results = await this.post(`api/v1/bullet-${access}`, { isPublic: access === 'public' }) as { code: string; data: KucoinWebsocketTokenResponse };
+    if (results.code === '200000') { return results.data; }
+    return Promise.reject(results);
+  }
+
 }

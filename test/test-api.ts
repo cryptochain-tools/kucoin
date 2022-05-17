@@ -29,6 +29,15 @@ const testApi = async () => {
 
     const api = (market as any) === 'spot' ? new KucoinApiSpot(options) : new KucoinApiFutures(options);
     
+
+    // ---------------------------------------------------------------------------------------------------
+    //  Websocket (Spot)
+    // ---------------------------------------------------------------------------------------------------
+    
+    // console.log('getWebsocketToken() =>', await api.getWebsocketToken('public'));
+    // console.log('getWebsocketToken() =>', await api.getWebsocketToken('private'));
+
+    
     if (api instanceof KucoinApiSpot) {
 
       // ---------------------------------------------------------------------------------------------------
@@ -51,18 +60,18 @@ const testApi = async () => {
       // console.log('getAccountsList() =>', await api.getAccountsList());
       
       // console.log('getAccountInformation(accountId) =>', await api.getAccountInformation('62272237c6c8070001d9ec84'));
-      
+
       // ---------------------------------------------------------------------------------------------------
       //  Orders (Spot)
       // ---------------------------------------------------------------------------------------------------
       
-      console.log('getOrders({ tradeType }) =>', await api.getOrders({ pageSize: 500  } as any));
-      // console.log('getOrders({ tradeType }) =>', await api.getOrders({ tradeType: 'TRADE', startAt: 1648764000, endAt: 1651269600, status: 'done' }));
+      // console.log('getOrders({ tradeType }) =>', await api.getOrders({ } as any));
+      // console.log('getOrders({ tradeType }) =>', await api.getOrders({ tradeType: 'TRADE', startAt: 1651269600, endAt: 1648764000 }));
       
       // console.log('getRecentOrders() =>', await api.getRecentOrders());
 
       // console.log('getFills({ tradeType }) =>', await api.getFills({ tradeType: 'TRADE' }));
-      // console.log('getFills({ tradeType }) =>', await api.getFills({ tradeType: 'TRADE', startAt: 1648764000, endAt: 1651269600 }));
+      // console.log('getFills({ tradeType }) =>', await api.getFills({ tradeType: 'TRADE', startAt: 1761269600000, endAt: 1108764000000 }));
       
       // console.log('getRecentFills() =>', await api.getRecentFills());
       
