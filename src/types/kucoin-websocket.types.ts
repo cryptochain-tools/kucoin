@@ -5,9 +5,9 @@ export type WsConnectionState = 'initial' | 'connecting' | 'connected' | 'reconn
 
 export type WsStreamType = 'user' | 'market';
 
-export type WsUserStreamEmitterType = 'positionChange' | 'balanceUpdate' | 'orderUpdate';
+export type WsUserStreamEmitterType = 'positionChange' | 'fundingSettlement' | 'riskLimitChange' | 'balanceUpdate' | 'withdrawHold' | 'orderUpdate';
 
-export type WsMarketStreamEmitterType = 'symbolTicker';
+export type WsMarketStreamEmitterType = 'symbolTicker' | 'symbolTickerV2';
 
 export type WsStreamEmitterType = 'welcome' | WsUserStreamEmitterType | WsMarketStreamEmitterType;
 
@@ -34,17 +34,19 @@ export interface KucoinWebsocketOptions {
 
 
 // ---------------------------------------------------------------------------------------------------
-//  Subscribe . Unsubscribe
+//  Topic subscription
 // ---------------------------------------------------------------------------------------------------
 
-export interface KucoinEventSubscription {
+export interface KucoinTopicSubscription {
   /** The id should be an unique value. Ex: `1545910660739`. */
   id: number;
-  type: 'subscribe' | 'unsusbcribe';
+  type: 'subscribe' | 'unsubscribe';
   /** Subscribed topic. Some topics support to divisional subscribe the informations of multiple trading pairs through ",".
    * Ex: `'/market/ticker:XBTUSDM'`.
    */
   topic: string;
+  /** Detailed description about subscribed topic. */
+  subject?: string;
   /** Adopted the private channel or not. Set as false by default. */
   privateChannel?: boolean;
   /** Whether the server needs to return the receipt information of this subscription or not. Set as false by default. */
@@ -52,7 +54,7 @@ export interface KucoinEventSubscription {
 }
 
 // ---------------------------------------------------------------------------------------------------
-//  Symbol Ticker
+//  Symbol Ticker (+v2)
 // ---------------------------------------------------------------------------------------------------
 
 /** {@link https://docs.kucoin.com/futures/#get-real-time-symbol-ticker Get Real-Time Symbol Ticker} */
@@ -87,6 +89,28 @@ export interface KucoinSymbolTickerEvent {
   }
 }
 
+/** {@link https://docs.kucoin.com/futures/#get-real-time-symbol-ticker-v2 Get Real-Time Symbol Ticker V2} */
+export interface KucoinSymbolTickerV2Event {
+  /** Ex: `"tickerV2"`. */
+  subject: string;
+  /** Ex: `"/contractMarket/tickerV2:XBTUSDM"`. */
+  topic: string;
+  data: {
+    /** Market of the symbol. Ex: `"XBTUSDM"`. */
+    symbol: string;
+    /** Best bid size. Ex: `795`. */
+    bestBidSize: number;
+    /** Best bid . Ex: `3200.00`. */
+    bestBidPrice: number;
+    /** Best ask size. Ex: `3600.00`. */
+    bestAskPrice: number;
+    /** Best ask. Ex: `284`. */
+    bestAskSize: number;
+    /** Filled time - nanosecond. Ex: `1553846081210004941`. */
+    ts: number;
+  }
+}
+
 // ---------------------------------------------------------------------------------------------------
 //  Trade Orders
 // ---------------------------------------------------------------------------------------------------
@@ -106,7 +130,7 @@ export interface KucoinTradeOrdersEvent {
     orderId: string;
     /** symbol. Ex: `"XBTUSDM"`. */
     symbol: string;
-    /** Message Type: "open", "match", "filled", "canceled", "update" . Ex: `"match"`. */
+    /** Message Type: "open", "match", "filled", "canceled", "update". Ex: `"match"`. */
     type: string;
     /** Order Status: "match", "open", "done". Ex: `"open"`. */
     status: string;
@@ -148,7 +172,7 @@ export interface KucoinTradeOrdersEvent {
 //  Account Balance Events
 // ---------------------------------------------------------------------------------------------------
 
-/** {@link https://docs.kucoin.com/futures/#account-balance-events Account Balance Events} */
+/** {@link https://docs.kucoin.com/futures/#account-balance-events Account Balance Events: Order Margin Event} */
 export interface KucoinOrderMarginEvent {
   /** Deprecated, will detele later. Ex: `'xbc453tg732eba53a88ggyt8c'`. */
   userId: string;
@@ -166,8 +190,7 @@ export interface KucoinOrderMarginEvent {
   }
 }
 
-
-/** {@link https://docs.kucoin.com/futures/#account-balance-events Account Balance Events} */
+/** {@link https://docs.kucoin.com/futures/#account-balance-events Account Balance Events: Available Balance Event} */
 export interface KucoinAvailableBalanceEvent {
   /** Deprecated, will detele later. Ex: `'xbc453tg732eba53a88ggyt8c'`. */
   userId: string;
@@ -187,13 +210,31 @@ export interface KucoinAvailableBalanceEvent {
   }
 }
 
+/** {@link https://docs.kucoin.com/futures/#account-balance-events Account Balance Events: Withdrawal Amount & Transfer-Out Amount Event} */
+export interface KucoinWithdrawalHoldEvent {
+  /** Deprecated, will detele later. Ex: `'xbc453tg732eba53a88ggyt8c'`. */
+  userId: string;
+  /** Ex: `'/contractAccount/wallet'`. */
+  topic: string;
+  /** Ex: `'withdrawHold.change'`. */
+  subject: string;
+  data: {
+    /** Current frozen amount for withdrawal. Ex: `5923`. */
+    withdrawHold: number;
+    /** Currency. Ex: `'USDT'`. */
+    currency: number;
+    /** Ex: `1553842862614`. */
+    timestamp: number;
+  }
+}
+
 
 // ---------------------------------------------------------------------------------------------------
 //  Position Change Events
 // ---------------------------------------------------------------------------------------------------
 
 /** {@link https://docs.kucoin.com/futures/#position-change-events Position Change Events} */
-export interface KucoinPositionChangeEvents {
+export interface KucoinPositionChangeByOperationsEvent {
   /** Ex: `'message'` */
   type: string;
   /** @deprecated will detele later. Ex: `'5c32d69203aa676ce4b543c7'` */
@@ -213,7 +254,7 @@ export interface KucoinPositionChangeEvents {
     crossMode: boolean;
     /** Liquidation price. Ex: `1000000.0`. */
     liquidationPrice: number;
-    /** Manually added margin amount . Ex: `0E-8`. */
+    /** Manually added margin amount. Ex: `0E-8`. */
     posLoss: number;
     /** Average entry price. Ex: `7508.22`. */
     avgEntryPrice: number;
@@ -229,7 +270,7 @@ export interface KucoinPositionChangeEvents {
     riskLimit: number;
     /** Unrealised value. Ex: `0.00266375`. */
     unrealisedCost: number;
-    /** Bankruptcy cost . Ex: `0.00000392`. */
+    /** Bankruptcy cost. Ex: `0.00000392`. */
     posComm: number;
     /** Maintenance margin. Ex: `0.00001724`. */
     posMaint: number;
@@ -243,11 +284,11 @@ export interface KucoinPositionChangeEvents {
     realisedCost: number;
     /** Mark value. Ex: `0.00251640`. */
     markValue: number;
-    /** Position margin     . Ex: `0.00266375`. */
+    /** Position margin. Ex: `0.00266375`. */
     posInit: number;
     /** Realised profit and losts. Ex: `-0.00000253`. */
     realisedPnl: number;
-    /** Position margin . Ex: `0.00252044`. */
+    /** Position margin. Ex: `0.00252044`. */
     maintMargin: number;
     /** Leverage of the order. Ex: `1.06`. */
     realLeverage: number;
@@ -280,3 +321,78 @@ export interface KucoinPositionChangeEvents {
   }
 }
 
+/** {@link https://docs.kucoin.com/futures/#position-change-events Position Change Events} */
+export interface KucoinPositionChangeByMarkPriceEvent {
+  /** Deprecated, will detele later. Ex: `'5cd3f1a7b7ebc19ae9558591'`. */
+  userId: string;
+  /** Ex: `'/contract/position:XBTUSDM'`. */
+  topic: string;
+  /** Ex: `'position.change',`. */
+  subject: string;
+  data: {
+    /** Mark price. Ex: `7947.83`. */
+      markPrice: number;
+      /** Mark value. Ex: `0.00251640`. */
+      markValue: number;
+      /** Position margin. Ex: `0.00252044`. */
+      maintMargin: number;
+      /** Leverage of the order. Ex: `10.06`. */
+      realLeverage: number;
+      /** Unrealised profit and lost. Ex: `-0.00014735`. */
+      unrealisedPnl: number;
+      /** Rate of return on investment. Ex: `-0.0553`. */
+      unrealisedRoePcnt: number;
+      /** Position profit and loss ratio. Ex: `-0.0553`. */
+      unrealisedPnlPcnt: number;
+      /** ADL ranking percentile. Ex: `0.52`. */
+      delevPercentage: number;
+      /** Current timestamp. Ex: `1558087175068`. */
+      currentTimestamp: number;
+      /** Currency used to clear and settle the trades. Ex: `'XBT'`. */
+      settleCurrency: string;
+  }
+}
+
+/** {@link https://docs.kucoin.com/futures/#position-change-events Position Change Events} */
+export interface KucoinFundingSettlementEvent {
+  /** @deprecated will delete later. Ex: `'xbc453tg732eba53a88ggyt8c'`. */
+  userId: string;
+  /** Ex: `'/contract/position:XBTUSDM'`. */
+  topic: string;
+  /** Ex: `'position.settlement'`. */
+  subject: string;
+  data: {
+    /** Funding time. Ex: `1551770400000`. */
+      fundingTime: number;
+      /** Position size. Ex: `100`. */
+      qty: number;
+      /** Settlement price. Ex: `3610.85`. */
+      markPrice: number;
+      /** Funding rate. Ex: `-0.002966`. */
+      fundingRate: number;
+      /** Funding fees. Ex: `-296`. */
+      fundingFee: number;
+      /** Current time (nanosecond). Ex: `1547697294838004923`. */
+      ts: number;
+      /** Currency used to clear and settle the trades. Ex: `'XBT'`. */
+      settleCurrency: string;
+  }
+}
+
+/** {@link https://docs.kucoin.com/futures/#position-change-events Position Change Events} */
+export interface KucoinRiskLimitChangeEvent {
+  /** Ex: `'xbc453tg732eba53a88ggyt8c'`. */
+  userId: string;
+  /** Ex: `'/contract/position:ADAUSDTM'`. */
+  topic: string;
+  /** Ex: `'position.adjustRiskLimit'`. */
+  subject: string;
+  data: { 
+    /** Successful or not. Ex: `true`. */
+    success: boolean;
+    /** Current risk limit level. Ex: `1`. */
+    riskLimitLevel: number;
+    /** Failure reason. */
+    msg: string;
+  }
+}

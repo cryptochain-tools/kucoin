@@ -6,9 +6,16 @@ import { KucoinApi } from './kucoin-api';
 import { KucoinApiSpot } from './kucoin-api-spot';
 import { KucoinApiFutures } from './kucoin-api-futures';
 import { KucoinMarketType, KucoinWebsocketTokenResponse } from './types/kucoin.types';
+import { KucoinWithdrawalHoldEvent } from './types/kucoin-websocket.types';
 import {
   KucoinAvailableBalanceEvent,
+  KucoinFundingSettlementEvent,
+  KucoinPositionChangeByMarkPriceEvent,
+  KucoinPositionChangeByOperationsEvent,
+  KucoinRiskLimitChangeEvent,
   KucoinSymbolTickerEvent,
+  KucoinSymbolTickerV2Event,
+  KucoinTopicSubscription,
   KucoinTradeOrdersEvent,
   KucoinWebsocketOptions,
   WsConnectionState,
@@ -92,14 +99,13 @@ export class KucoinWebsocket extends EventEmitter {
   }
 
   // ---------------------------------------------------------------------------------------------------
-  //  connect . terminate
+  //  connect . close
   // ---------------------------------------------------------------------------------------------------
   
   /** {@link https://docs.kucoin.com/futures/#apply-for-connection-token Apply for Connection Token} */
   async connect() {
-    // Obtenim la info per la connexió amb el websocket.
+    // Obtenim dades de connexió amb el websocket.
     const wsType = this.streamType === 'market' ? 'public' : 'private';
-    // const wsInfo: KucoinWebsocketTokenResponse = await this.api.getWebsocketToken(wsType).catch(err => console.error(err));
     this.api.getWebsocketToken(wsType).then((wsInfo: KucoinWebsocketTokenResponse) => {
       console.log(wsInfo);
       // TODO: Throw error if !wsInfo.
@@ -246,21 +252,21 @@ export class KucoinWebsocket extends EventEmitter {
   // ---------------------------------------------------------------------------------------------------
 
   protected onWsMessage(event: WebSocket.MessageEvent) {
-    // console.log(this.wsId, event.data);
-    // console.log(event.data);
-    // console.log(this.parseWsMessage(event));
     const data = this.parseWsMessage(event);
     this.emit('message', data);
-    // console.log('event type =>', this.discoverEventType(data));
     switch (this.discoverEventType(data)) {
       case 'welcome':
         this.connectId = data.id;
         console.log(this.wsId, '=> connectId:', this.connectId);
         break;
       case 'symbolTicker':
+      case 'symbolTickerV2':
       case 'orderUpdate':
       case 'balanceUpdate':
+      case 'withdrawHold':
       case 'positionChange':
+      case 'fundingSettlement':
+      case 'riskLimitChange':
         this.emitTopicEvent(data);
         break;
       default:
@@ -285,15 +291,15 @@ export class KucoinWebsocket extends EventEmitter {
       if (Object.keys(obj).length === 2 && obj.hasOwnProperty('id') && obj.hasOwnProperty('type')) {
         return obj.type;
       } else if (obj.hasOwnProperty('topic')) {
-        if (obj.topic.startsWith(`/contractMarket/ticker`)) {
-          return 'symbolTicker';
-        } else if (obj.topic.startsWith(`/contractMarket/tradeOrders`)) {
-          return 'orderUpdate';
-        } else if (obj.topic === '/contractAccount/wallet' && obj.subject === 'availableBalance.change') {
-          return 'balanceUpdate';
-        } else if (obj.topic.startsWith('/contract/position') && obj.subject === 'position.change') {
-          return 'positionChange';
-        }
+        const { topic, subject } = obj;
+        if (topic === `/contractMarket/ticker` || topic.startsWith(`/contractMarket/ticker:`)) { return 'symbolTicker'; }
+        else if (topic.startsWith(`/contractMarket/tickerV2`)) { return 'symbolTickerV2'; }
+        else if (topic.startsWith(`/contractMarket/tradeOrders`)) { return 'orderUpdate'; }
+        else if (topic === '/contractAccount/wallet' && subject === 'availableBalance.change') { return 'balanceUpdate'; }
+        else if (topic === '/contractAccount/wallet' && subject === 'withdrawHold.change') { return 'withdrawHold'; }
+        else if (topic.startsWith('/contract/position') && subject === 'position.change') { return 'positionChange'; }
+        else if (topic.startsWith('/contract/position') && subject === 'position.settlement') { return 'fundingSettlement'; }
+        else if (topic.startsWith('/contract/position') && subject === 'position.adjustRiskLimit') { return 'riskLimitChange'; }
       }
     }
     return undefined;
@@ -306,9 +312,15 @@ export class KucoinWebsocket extends EventEmitter {
 
   /** {@link https://docs.kucoin.com/futures/#get-real-time-symbol-ticker Get Real-Time Symbol Ticker} */
   symbolTicker(symbol: string): Subject<KucoinSymbolTickerEvent> {
-    // const topic = `/market/ticker:${symbol}`;
     const topic = `/contractMarket/ticker:${symbol}`;
     const subject = `ticker`;
+    return this.registerTopicSubscription(topic, subject);
+  }
+
+  /** {@link https://docs.kucoin.com/futures/#get-real-time-symbol-ticker-v2 Get Real-Time Symbol Ticker V2} */
+  symbolTickerV2(symbol: string): Subject<KucoinSymbolTickerV2Event> {
+    const topic = `/contractMarket/tickerV2:${symbol}`;
+    const subject = `tickerV2`; // ¿? 'ticker' vs 'tickerV2'
     return this.registerTopicSubscription(topic, subject);
   }
 
@@ -320,14 +332,42 @@ export class KucoinWebsocket extends EventEmitter {
   orderUpdate(): Subject<KucoinTradeOrdersEvent> {
     const topic = `/spotMarket/tradeOrders`;
     const subject = `orderChange`;
+    // const subject = `symbolOrderChange`;
     return this.registerTopicSubscription(topic, subject);
   }
 
-  /** {@link https://docs.kucoin.com/futures/#account-balance-events Available Balance Event} */
+  /** {@link https://docs.kucoin.com/futures/#account-balance-events Account Balance Events: Available Balance Event} */
   balanceUpdate(): Subject<KucoinAvailableBalanceEvent> {
-    // const topic = `/account/balance`;
     const topic = `/contractAccount/wallet`;
     const subject = `availableBalance.change`;
+    return this.registerTopicSubscription(topic, subject);
+  }
+
+  /** {@link https://docs.kucoin.com/futures/#account-balance-events Account Balance Events: Withdrawal Amount & Transfer-Out Amount Event} */
+  withdrawHold(): Subject<KucoinWithdrawalHoldEvent> {
+    const topic = `/contractAccount/wallet`;
+    const subject = `withdrawHold.change`;
+    return this.registerTopicSubscription(topic, subject);
+  }
+
+  /** {@link https://docs.kucoin.com/futures/#position-change-events Position Change Events} */
+  positionChange(symbol: string): Subject<KucoinPositionChangeByOperationsEvent | KucoinPositionChangeByMarkPriceEvent> {
+    const topic = `/contract/position:${symbol}`;
+    const subject = `position.change`;
+    return this.registerTopicSubscription(topic, subject);
+  }
+
+  /** {@link https://docs.kucoin.com/futures/#position-change-events Position Change Events} */
+  fundingSettlement(symbol: string): Subject<KucoinFundingSettlementEvent> {
+    const topic = `/contract/position:${symbol}`;
+    const subject = `position.settlement`;
+    return this.registerTopicSubscription(topic, subject);
+  }
+
+  /** {@link https://docs.kucoin.com/futures/#position-change-events Position Change Events} */
+  riskLimitChange(symbol: string): Subject<KucoinRiskLimitChangeEvent> {
+    const topic = `/contract/position:${symbol}`;
+    const subject = `position.adjustRiskLimit`;
     return this.registerTopicSubscription(topic, subject);
   }
 
@@ -353,12 +393,13 @@ export class KucoinWebsocket extends EventEmitter {
     const topics: string[] = [];
     Object.keys(this.emitters).map(topicKey => {
       const stored = this.emitters[topicKey];
-      if (this.isSubjectUnobserved(stored)) {
+      const [topic, subject] = topicKey.split('#');
+      const hasSubscriptions = !this.isSubjectUnobserved(stored);
+      if (hasSubscriptions) {
+        this.subscribeTopic(topic, subject);
+      } else {
         if (stored) { stored.complete(); }
         delete this.emitters[topicKey];
-      } else {
-        const [topic, subject] = topicKey.split('#');
-        this.subscribeTopic(topic, subject);
       }
     });
   }
@@ -371,16 +412,14 @@ export class KucoinWebsocket extends EventEmitter {
     const subject = event.subject;
     const topicKey = subject ? `${topic}#${subject}` : topic;
     const stored = this.emitters[topicKey];
-    if (!stored) {
-      throw (`No s'ha trobat l'emisor pel tòpic ${topic}#${subject}`);
-    }
-    if (this.isSubjectUnobserved(stored)) {
+    if (!stored) { return; }
+    const hasSubscriptions = !this.isSubjectUnobserved(stored);
+    if (hasSubscriptions) {
+      stored.next(event);
+    } else {
       this.unsubscribeTopic(topic, subject);
       if (stored) { stored.complete(); }
       delete this.emitters[topicKey];
-    } else {
-      // console.log(`emit ${topicKey} =>`, event);
-      stored.next(event);
     }
   }
 
@@ -391,7 +430,7 @@ export class KucoinWebsocket extends EventEmitter {
   protected subscribeTopic(topic: string, subject?: string) {
     console.log(this.wsId, '=> subscribing...', { topic, subject });
     const id = ++this.subscriptionId;
-    const data: any = { type: "subscribe", id, topic, response: true };
+    const data: KucoinTopicSubscription = { type: "subscribe", id, topic, response: true };
     if (subject) { data.subject = subject; }
     this.ws.send(JSON.stringify(data), error => error ? this.onWsError(error as any) : undefined);
   }
@@ -399,7 +438,7 @@ export class KucoinWebsocket extends EventEmitter {
   protected unsubscribeTopic(topic: string, subject?: string) {
     console.log(this.wsId, '=> unsubscribing...', { topic, subject });
     const id = ++this.subscriptionId;
-    const data: any = { type: "unsubscribe", id, topic, response: true };
+    const data: KucoinTopicSubscription = { type: "unsubscribe", id, topic, response: true };
     if (subject) { data.subject = subject; }
     this.ws.send(JSON.stringify(data), error => error ? this.onWsError(error as any) : undefined);
   }
