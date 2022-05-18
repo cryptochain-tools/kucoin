@@ -4,7 +4,9 @@ export interface KucoinApiCredentials {
     apiPassphrase: string;
 }
 export interface KucoinApiOptions {
-    credentials: KucoinApiCredentials;
+    apiKey: string;
+    apiSecret: string;
+    apiPassphrase: string;
     isTest?: boolean;
 }
 export interface KucoinApiResquestOptions {

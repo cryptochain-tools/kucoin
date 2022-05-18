@@ -16,8 +16,12 @@ export interface KucoinWebsocketOptions {
   market: KucoinMarketType;
   /** Indica si l'stream és d'usuari o de mercat. */
   streamType: WsStreamType;
-  /** Api credentials. */
-  credentials?: KucoinApiCredentials;
+  /** Public user api key. */
+  apiKey?: string;
+  /** Private user api key. */
+  apiSecret?: string;
+  /** User api passphrase. */
+  apiPassphrase?: string;
   /** Indica si l'api està en mode test o en real. */
   isTest?: boolean,
   /** Indica el periode de delay abans de tornar a connectar. */

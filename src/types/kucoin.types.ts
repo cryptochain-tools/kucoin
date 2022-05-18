@@ -12,8 +12,12 @@ export interface KucoinApiCredentials {
 }
 
 export interface KucoinApiOptions {
-  /** Api credentials. */
-  credentials: KucoinApiCredentials;
+  /** Public user api key. */
+  apiKey: string;
+  /** Private user api key. */
+  apiSecret: string;
+  /** User api passphrase. */
+  apiPassphrase: string;
   /** Indica si l'api està en mode test o en real. */
   isTest?: boolean,
   // /** Override the max size of the request window (in ms). */
