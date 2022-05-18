@@ -11,8 +11,11 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./kucoin-api"), exports);
+__exportStar(require("./kucoin-api-spot"), exports);
+__exportStar(require("./kucoin-api-futures"), exports);
 __exportStar(require("./kucoin-websocket"), exports);
 __exportStar(require("./types/kucoin.types"), exports);
 __exportStar(require("./types/kucoin-spot.types"), exports);
+__exportStar(require("./types/kucoin-futures.types"), exports);
 __exportStar(require("./types/kucoin-websocket.types"), exports);
 //# sourceMappingURL=index.js.map
