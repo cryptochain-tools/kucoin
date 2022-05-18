@@ -24,7 +24,7 @@ const testUserWs = async () => {
     const options: KucoinWebsocketOptions = {
       streamType: 'user',
       market: market,
-      ...getApiKeys(market),
+      credentials: { ...getApiKeys(market) },
       // isTest: true,
     };
 

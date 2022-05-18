@@ -29,9 +29,9 @@ class KucoinWebsocket extends events_1.default {
     }
     get market() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.market; }
     get streamType() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.streamType; }
-    get apiKey() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.apiKey; }
-    get apiSecret() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.apiSecret; }
-    get apiPassphrase() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.apiPassphrase; }
+    get apiKey() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.credentials.apiKey; }
+    get apiSecret() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.credentials.apiSecret; }
+    get apiPassphrase() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.credentials.apiPassphrase; }
     get isTest() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.isTest; }
     get reconnectPeriod() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.reconnectPeriod; }
     get pingInterval() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.pingInterval; }
@@ -45,8 +45,8 @@ class KucoinWebsocket extends events_1.default {
         };
     }
     getApiClient() {
-        const { apiKey, apiSecret, apiPassphrase, isTest } = this.options;
-        return this.market === 'spot' ? new kucoin_api_spot_1.KucoinApiSpot({ apiKey, apiSecret, apiPassphrase, isTest }) : new kucoin_api_futures_1.KucoinApiFutures({ apiKey, apiSecret, apiPassphrase, isTest });
+        const { credentials, isTest } = this.options;
+        return this.market === 'spot' ? new kucoin_api_spot_1.KucoinApiSpot({ credentials, isTest }) : new kucoin_api_futures_1.KucoinApiFutures({ credentials, isTest });
     }
     initialize() {
         return __awaiter(this, void 0, void 0, function* () {

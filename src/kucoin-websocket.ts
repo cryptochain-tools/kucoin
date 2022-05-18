@@ -59,11 +59,11 @@ export class KucoinWebsocket extends EventEmitter {
 
   get streamType(): WsStreamType { return this.options?.streamType; }
 
-  get apiKey(): string { return this.options?.apiKey; }
+  get apiKey(): string { return this.options?.credentials.apiKey; }
 
-  get apiSecret(): string { return this.options?.apiSecret; }
+  get apiSecret(): string { return this.options?.credentials.apiSecret; }
   
-  get apiPassphrase(): string { return this.options?.apiPassphrase; }
+  get apiPassphrase(): string { return this.options?.credentials.apiPassphrase; }
 
   get isTest(): boolean { return this.options?.isTest; }
 
@@ -87,8 +87,8 @@ export class KucoinWebsocket extends EventEmitter {
   // ---------------------------------------------------------------------------------------------------
 
   protected getApiClient(): KucoinApi {
-    const { apiKey, apiSecret, apiPassphrase, isTest } = this.options;
-    return this.market === 'spot' ? new KucoinApiSpot({ apiKey, apiSecret, apiPassphrase, isTest }) :  new KucoinApiFutures({ apiKey, apiSecret, apiPassphrase, isTest });
+    const { credentials, isTest } = this.options;
+    return this.market === 'spot' ? new KucoinApiSpot({ credentials, isTest }) :  new KucoinApiFutures({ credentials, isTest });
   }
 
   protected async initialize() {

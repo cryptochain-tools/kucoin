@@ -2,18 +2,24 @@
 //  Api types
 // ---------------------------------------------------------------------------------------------------
 
-export interface KucoinApiOptions {
+export interface KucoinApiCredentials {
   /** Public user api key. */
   apiKey: string;
   /** Private user api key. */
   apiSecret: string;
   /** User api passphrase. */
   apiPassphrase: string;
+}
+
+export interface KucoinApiOptions {
+  /** Api credentials. */
+  credentials: KucoinApiCredentials;
   /** Indica si l'api està en mode test o en real. */
   isTest?: boolean,
   // /** Override the max size of the request window (in ms). */
   // recvWindow?: number;
 }
+
 
 /**
  * ```typescript

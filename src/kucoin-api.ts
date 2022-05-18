@@ -29,11 +29,11 @@ export abstract class KucoinApi {
   // ---------------------------------------------------------------------------------------------------
 
   /** {@link https://www.kucoin.com/es/account/api/create?type=trade Create API Keys} */
-  get apiKey(): string { return this.options?.apiKey; }
+  get apiKey(): string { return this.options?.credentials.apiKey; }
   
-  get apiSecret(): string { return this.options?.apiSecret; }
+  get apiSecret(): string { return this.options?.credentials.apiSecret; }
   
-  get apiPassphrase(): string { return this.options?.apiPassphrase; }
+  get apiPassphrase(): string { return this.options?.credentials.apiPassphrase; }
   
   get isTest(): boolean { return this.options?.isTest; }
   
@@ -45,9 +45,9 @@ export abstract class KucoinApi {
   }
 
   public setCredentials(data: { apiKey: string; apiSecret: string; apiPassphrase: string }): void {
-    this.options.apiKey = data.apiKey;
-    this.options.apiSecret = data.apiSecret;
-    this.options.apiPassphrase = data.apiPassphrase;
+    this.options.credentials.apiKey = data.apiKey;
+    this.options.credentials.apiSecret = data.apiSecret;
+    this.options.credentials.apiPassphrase = data.apiPassphrase;
   }
 
 

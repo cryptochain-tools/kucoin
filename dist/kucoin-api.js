@@ -19,9 +19,9 @@ class KucoinApi {
     constructor(options) {
         this.options = Object.assign(Object.assign({}, this.defaultOptions), options);
     }
-    get apiKey() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.apiKey; }
-    get apiSecret() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.apiSecret; }
-    get apiPassphrase() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.apiPassphrase; }
+    get apiKey() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.credentials.apiKey; }
+    get apiSecret() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.credentials.apiSecret; }
+    get apiPassphrase() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.credentials.apiPassphrase; }
     get isTest() { var _a; return (_a = this.options) === null || _a === void 0 ? void 0 : _a.isTest; }
     get defaultOptions() {
         return {
@@ -29,9 +29,9 @@ class KucoinApi {
         };
     }
     setCredentials(data) {
-        this.options.apiKey = data.apiKey;
-        this.options.apiSecret = data.apiSecret;
-        this.options.apiPassphrase = data.apiPassphrase;
+        this.options.credentials.apiKey = data.apiKey;
+        this.options.credentials.apiSecret = data.apiSecret;
+        this.options.credentials.apiPassphrase = data.apiPassphrase;
     }
     get(endpoint, options) { return this.request('GET', endpoint, options); }
     post(endpoint, options) { return this.request('POST', endpoint, options); }

@@ -21,7 +21,7 @@ const testApi = async () => {
     // const market: KucoinMarketType = 'futures';
 
     const options: KucoinApiOptions = {
-      ...getApiKeys(market),
+      credentials: { ...getApiKeys(market) },
       // isTest: true,
     };
 

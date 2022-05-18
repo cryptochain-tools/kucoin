@@ -1,4 +1,4 @@
-import { KucoinMarketType, KucoinOrderSide } from "./kucoin.types";
+import { KucoinApiCredentials, KucoinMarketType, KucoinOrderSide } from "./kucoin.types";
 export declare type WsConnectionState = 'initial' | 'connecting' | 'connected' | 'reconnecting' | 'closing';
 export declare type WsStreamType = 'user' | 'market';
 export declare type WsUserStreamEmitterType = 'positionChange' | 'fundingSettlement' | 'riskLimitChange' | 'balanceUpdate' | 'withdrawHold' | 'orderUpdate';
@@ -7,9 +7,7 @@ export declare type WsStreamEmitterType = 'welcome' | WsUserStreamEmitterType | 
 export interface KucoinWebsocketOptions {
     market: KucoinMarketType;
     streamType: WsStreamType;
-    apiKey?: string;
-    apiSecret?: string;
-    apiPassphrase?: string;
+    credentials?: KucoinApiCredentials;
     isTest?: boolean;
     reconnectPeriod?: number;
     pingInterval?: number;

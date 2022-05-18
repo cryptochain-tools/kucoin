@@ -1,4 +1,4 @@
-import { KucoinMarketType, KucoinOrderSide } from "./kucoin.types";
+import { KucoinApiCredentials, KucoinMarketType, KucoinOrderSide } from "./kucoin.types";
 
 
 export type WsConnectionState = 'initial' | 'connecting' | 'connected' | 'reconnecting' | 'closing';
@@ -16,12 +16,8 @@ export interface KucoinWebsocketOptions {
   market: KucoinMarketType;
   /** Indica si l'stream és d'usuari o de mercat. */
   streamType: WsStreamType;
-  /** Public user api key. */
-  apiKey?: string;
-  /** Private user api key. */
-  apiSecret?: string;
-  /** User api passphrase. */
-  apiPassphrase?: string;
+  /** Api credentials. */
+  credentials?: KucoinApiCredentials;
   /** Indica si l'api està en mode test o en real. */
   isTest?: boolean,
   /** Indica el periode de delay abans de tornar a connectar. */
