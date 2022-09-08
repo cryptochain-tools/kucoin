@@ -5,6 +5,7 @@ import { KucoinOrderSide, KucoinOrderTimeInForce, KucoinOrderType, KucoinStopOrd
 //  MARKET
 // ---------------------------------------------------------------------------------------------------
 
+/// getActiveSymbols . getSymbolInformation
 
 /** {@link https://docs.kucoin.com/futures/#get-order-info-of-the-contract Get Order Info of the Contract} */
 export interface KucoinFuturesSymbolInformation {
@@ -12,7 +13,7 @@ export interface KucoinFuturesSymbolInformation {
   symbol: string;
   /** Contract group. */
   rootSymbol: string;
-  /** Type of the contract. */
+  /** Type of the contract. Ex: `FFWCSX` */
   type: string;
   /** First Open Date. */
   firstOpenDate: number;
@@ -120,6 +121,8 @@ export interface KucoinFuturesSymbolInformation {
   priceChg: number;
 }
 
+/// getSymbolPriceTicker . getPosition
+
 /**
  * {@link https://docs.kucoin.com/futures/#get-real-time-ticker Get Ticker}
  * {@link https://docs.kucoin.com/futures/#get-position-details Get Position Details}
@@ -128,6 +131,8 @@ export interface KucoinFuturesSymbolRequest {
   /** Symbol of the contract. */
   symbol: string;
 }
+
+/// getSymbolPriceTicker
 
 /** {@link https://docs.kucoin.com/futures/#get-real-time-ticker Get Ticker} */
 export interface KucoinFuturesSymbolPriceTicker {
@@ -160,6 +165,8 @@ export interface KucoinFuturesSymbolPriceTicker {
 //  ACCOUNT
 // ---------------------------------------------------------------------------------------------------
 
+/// getAccountOverview
+
 /** {@link https://docs.kucoin.com/futures/#get-account-overview Get Account Overview} */
 export interface KucoinFuturesAccountOverviewRequest {
   /** Currecny, including `XBT`,`USDT`,Default `XBT`. */
@@ -185,6 +192,8 @@ export interface KucoinFuturesAccountOverview {
   /** currency code. */
   currency: string;
 }
+
+/// getPositions . getPosition
 
 /** {@link https://docs.kucoin.com/futures/#get-position-list Get Position List} */
 export interface KucoinFuturesPosition {
@@ -268,6 +277,7 @@ export interface KucoinFuturesPosition {
   riskLimitLevel?: number;
 }
 
+/// getRiskLimitLevel
 
 /** {@link https://docs.kucoin.com/futures/#risk-limit-level Risk Limit Level} */
 export interface KucoinFuturesRiskLimit {
@@ -292,6 +302,7 @@ export interface KucoinFuturesRiskLimit {
 //  ORDERS
 // ---------------------------------------------------------------------------------------------------
 
+/// getOrders
 
 /** {@link https://docs.kucoin.com/futures/#get-order-list Get Order List} */
 export interface KucoinFuturesGetOrdersRequest {
@@ -318,6 +329,8 @@ export interface KucoinFuturesGetOrdersResponse {
   items: KucoinFuturesOrder[];
 }
 
+/// getOrder
+
 /** {@link https://docs.kucoin.com/futures/#get-details-of-a-single-order Get Details of a Single Order} */
 export interface KucoinFuturesGetOrderRequest {
   /** Client order id. */
@@ -334,9 +347,9 @@ export interface KucoinFuturesOrder {
   /** Symbol of the contract. */
   symbol: string;
   /** Order type, market order or limit order. */
-  type: string;
+  type: KucoinOrderType;
   /** Transaction side. */
-  side: string;
+  side: KucoinOrderSide;
   /** Order price. */
   price: string;
   /** Order quantity. */
@@ -403,6 +416,33 @@ export interface KucoinFuturesOrder {
   reduceOnly: boolean;
 }
 
+/// getFills . getRecentFills
+
+/** {@link https://docs.kucoin.com/#list-fills List Fills} */
+export interface KucoinFuturesGetFillsRequest {
+  /** Limit the list of fills to this orderId（If you specify orderId, ignore other conditions）. */
+  orderId?: string;
+  /** Limit the list of fills to this symbol. */
+  symbol?: string;
+  /** buy or sell. */
+  side?: KucoinOrderSide;
+  /** limit, market, limit_stop or market_stop. */
+  type?: KucoinOrderType;
+  /** Start time (milisecond). */
+  startAt?: number;
+  /** End time (milisecond). */
+  endAt?: number;
+}
+
+/** {@link https://docs.kucoin.com/#list-fills List Fills} */
+export interface KucoinFuturesGetFillsResponse{
+  currentPage: number;
+  pageSize: number;
+  totalNum: number;
+  totalPage: number;
+  items: KucoinFuturesOrderFilled[];
+}
+
 /**
  * {@link https://docs.kucoin.com/#list-fills List Fills}
  * {@link https://docs.kucoin.com/#recent-fills Recent Fills}
@@ -448,30 +488,7 @@ export interface KucoinFuturesOrder {
   tradeTime: number;
 }
 
-/** {@link https://docs.kucoin.com/#list-fills List Fills} */
-export interface KucoinFuturesGetFillsRequest {
-  /** Limit the list of fills to this orderId（If you specify orderId, ignore other conditions）. */
-  orderId?: string;
-  /** Limit the list of fills to this symbol. */
-  symbol?: string;
-  /** buy or sell. */
-  side?: KucoinOrderSide;
-  /** limit, market, limit_stop or market_stop. */
-  type?: KucoinOrderType;
-  /** Start time (milisecond). */
-  startAt?: number;
-  /** End time (milisecond). */
-  endAt?: number;
-}
-
-/** {@link https://docs.kucoin.com/#list-fills List Fills} */
-export interface KucoinFuturesGetFillsResponse{
-  currentPage: number;
-  pageSize: number;
-  totalNum: number;
-  totalPage: number;
-  items: KucoinFuturesOrderFilled[];
-}
+/// postOrder
 
 /** {@link https://docs.kucoin.com/futures/#place-an-order Place an Order} */
 export interface KucoinFuturesPostOrderRequest {
@@ -522,11 +539,15 @@ export interface KucoinFuturesOrderResponse {
   orderId: string;
 }
 
+/// cancelOrder . cancelAllSymbolOrders
+
 /** {@link https://docs.kucoin.com/futures/#cancel-an-order Cancel an Order} */
 export interface KucoinFuturesCancelOrdersResponse {
   /** Array of cancelled order ids. */
   cancelledOrderIds: string[];
 }
+
+/// cancelAllSymbolOrders
 
 /** {@link https://docs.kucoin.com/futures/#limit-order-mass-cancelation Limit Order Mass Cancelation} */
 export interface KucoinFuturesCancelAllSymbolOrdersRequest {

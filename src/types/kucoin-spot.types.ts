@@ -5,6 +5,7 @@ import { KucoinOrderSide, KucoinOrderType, KucoinTradeType } from "./kucoin.type
 //  MARKET
 // ---------------------------------------------------------------------------------------------------
 
+/// getSymbolsList
 
 /** {@link https://docs.kucoin.com/#get-symbols-list Get Symbols List} */
 export interface KucoinSpotSymbolsInformationRequest {
@@ -48,6 +49,8 @@ export interface KucoinSpotSymbolInformation {
   priceLimitRate: boolean;
 }
 
+/// getSymbolKlines
+
 export type KucoinSpotSymbolKlineType = '1min' | '3min' | '5min' | '15min' | '30min' |
   '1hour' | '2hour' | '4hour' | '6hour' | '8hour' | '12hour' | '1day' | '1week';
 
@@ -85,9 +88,7 @@ export interface KucoinSpotSymbolKline {
 /** {@link https://docs.kucoin.com/#list-accounts List Accounts} */
 export type KucoinSpotAccountType = 'main' | 'trade' | 'margin';
 
-
-//  User Info
-// ---------------------------------------------------------------------------------------------------
+/// getUserInfo
 
 /** {@link https://docs.kucoin.com/#get-user-info-of-all-sub-accounts Get User Info of all Sub-Accounts} */
 export interface KucoinSpotUserInfo {
@@ -101,9 +102,7 @@ export interface KucoinSpotUserInfo {
   remarks: string;
 }
 
-
-//  List Accounts
-// ---------------------------------------------------------------------------------------------------
+/// getAccountsList
 
 /** {@link https://docs.kucoin.com/#list-accounts List Accounts} */
 export interface KucoinSpotListAccountsRequest {
@@ -129,8 +128,7 @@ export interface KucoinSpotListAccount {
   holds: string;
 }
 
-//  Get an Account
-// ---------------------------------------------------------------------------------------------------
+/// getAccountInformation
 
 /** {@link https://docs.kucoin.com/#get-an-account Get an Account} */
 export interface KucoinSpotAccountInformation {
@@ -144,9 +142,7 @@ export interface KucoinSpotAccountInformation {
   holds: string;
 }
 
-
-//  Create an Account
-// ---------------------------------------------------------------------------------------------------
+/// postAccount
 
 /** {@link https://docs.kucoin.com/#create-an-account Create an Account} */
 export interface KucoinSpotCreateAccountRequest {
@@ -162,9 +158,7 @@ export interface KucoinSpotCreateAccountResponse {
   id: string;
 }
 
-
-//  Account Balance
-// ---------------------------------------------------------------------------------------------------
+/// getAccountBalance
 
 /** {@link https://docs.kucoin.com/#get-account-balance-of-a-sub-account Get Account Balance of a Sub-Account} */
 export interface KucoinSpotAccountBalanceResponse {
@@ -202,6 +196,8 @@ export interface KucoinSpotAccountBalance {
 // ---------------------------------------------------------------------------------------------------
 //  ORDERS
 // ---------------------------------------------------------------------------------------------------
+
+/// getOrders . getRecentOrders
 
 /** {@link https://docs.kucoin.com/#list-orders List Orders} */
 export interface KucoinSpotGetOrdersRequest {
@@ -297,6 +293,35 @@ export interface KucoinSpotOrder {
   tradeType: KucoinTradeType;
 }
 
+/// getFills . getRecentFills
+
+/** {@link https://docs.kucoin.com/#list-fills List Fills} */
+export interface KucoinSpotGetFillsRequest {
+  /** Limit the list of fills to this orderId（If you specify orderId, ignore other conditions）. */
+  orderId?: string;
+  /** Limit the list of fills to this symbol. */
+  symbol?: string;
+  /** buy or sell. */
+  side?: KucoinOrderSide;
+  /** limit, market, limit_stop or market_stop. */
+  type?: KucoinOrderType;
+  /** Start time (milisecond). */
+  startAt?: number;
+  /** End time (milisecond). */
+  endAt?: number;
+  /** The type of trading : TRADE（Spot Trading）, MARGIN_TRADE (Margin Trading). */
+  tradeType: KucoinTradeType;
+}
+
+/** {@link https://docs.kucoin.com/#list-fills List Fills} */
+export interface KucoinSpotGetFillsResponse{
+  currentPage: number;
+  pageSize: number;
+  totalNum: number;
+  totalPage: number;
+  items: KucoinSpotOrderFilled[];
+}
+
 /**
  * {@link https://docs.kucoin.com/#list-fills List Fills}
  * {@link https://docs.kucoin.com/#recent-fills Recent Fills}
@@ -336,32 +361,7 @@ export interface KucoinSpotOrderFilled {
   tradeType: KucoinTradeType;
 }
 
-/** {@link https://docs.kucoin.com/#list-fills List Fills} */
-export interface KucoinSpotGetFillsRequest {
-  /** Limit the list of fills to this orderId（If you specify orderId, ignore other conditions）. */
-  orderId?: string;
-  /** Limit the list of fills to this symbol. */
-  symbol?: string;
-  /** buy or sell. */
-  side?: KucoinOrderSide;
-  /** limit, market, limit_stop or market_stop. */
-  type?: KucoinOrderType;
-  /** Start time (milisecond). */
-  startAt?: number;
-  /** End time (milisecond). */
-  endAt?: number;
-  /** The type of trading : TRADE（Spot Trading）, MARGIN_TRADE (Margin Trading). */
-  tradeType: KucoinTradeType;
-}
-
-/** {@link https://docs.kucoin.com/#list-fills List Fills} */
-export interface KucoinSpotGetFillsResponse{
-  currentPage: number;
-  pageSize: number;
-  totalNum: number;
-  totalPage: number;
-  items: KucoinSpotOrderFilled[];
-}
+/// postOrder
 
 /** {@link https://docs.kucoin.com/#place-a-new-order Place a new order} */
 export interface KucoinSpotPostOrderRequest {
@@ -372,7 +372,7 @@ export interface KucoinSpotPostOrderRequest {
   /** a valid trading symbol code. e.g. ETH-BTC */
   symbol: string;
   /** `limit` or `market` (default is limit) */
-  type?: string;
+  type?: KucoinOrderType;
   /** remark for the order, length cannot exceed 100 utf8 characters */
   remark?: string;
   /** self trade prevention , `CN`, `CO`, `CB` or `DC` */
@@ -401,11 +401,18 @@ export interface KucoinSpotPostOrderRequest {
   funds?: string;
 }
 
-/** {@link https://docs.kucoin.com/#place-a-new-order Place a new order} */
-export interface KucoinSpotOrderResponse {
+/// postOrder . cancelOrder
+
+/**
+ * {@link https://docs.kucoin.com/#place-a-new-order Place a new order}
+ * {@link https://docs.kucoin.com/#cancel-all-orders Cancel all orders}
+ */
+export interface KucoinSpotOrderIdResponse {
   /** The ID of the order. Ex: `'5bd6e9286d99522a52e458de'`. */
   orderId: string;
 }
+
+/// cancelAllSymbolOrders
 
 /** {@link https://docs.kucoin.com/#cancel-all-orders Cancel all orders} */
 export interface KucoinSpotCancelAllSymbolOrdersRequest {

@@ -21,6 +21,7 @@ import {
   KucoinSpotGetFillsRequest,
   KucoinSpotGetFillsResponse,
   KucoinSpotOrderFilled,
+  KucoinSpotOrderIdResponse,
 } from './types/kucoin-spot.types';
 
 
@@ -142,12 +143,12 @@ export class KucoinApiSpot extends KucoinApi {
   }
 
   /** {@link https://docs.kucoin.com/#place-a-new-order Place a new order} */
-  postOrder(params: KucoinSpotPostOrderRequest): Promise<KucoinSpotOrderResponse> {
+  postOrder(params: KucoinSpotPostOrderRequest): Promise<KucoinSpotOrderIdResponse> {
     return this.post('api/v1/orders', { params });
   }
 
   /** {@link https://docs.kucoin.com/#cancel-an-order Cancel an order} */
-  cancelOrder(orderId: string): Promise<KucoinSpotOrderResponse> {
+  cancelOrder(orderId: string): Promise<KucoinSpotOrderIdResponse> {
     return this.delete(`api/v1/orders/${orderId}`);
   }
 
