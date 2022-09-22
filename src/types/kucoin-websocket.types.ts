@@ -112,6 +112,56 @@ export interface KucoinSymbolTickerV2Event {
 }
 
 // ---------------------------------------------------------------------------------------------------
+//  Klines
+// ---------------------------------------------------------------------------------------------------
+
+/** {@link https://docs.kucoin.com/spot#klines Klines} */
+export interface KucoinSymbolTickerV2Event {
+  /** Ex: `"tickerV2"`. */
+  subject: string;
+  /** Ex: `"/contractMarket/tickerV2:XBTUSDM"`. */
+  topic: string;
+  data: {
+    /** Market of the symbol. Ex: `"XBTUSDM"`. */
+    symbol: string;
+    /** Best bid size. Ex: `795`. */
+    bestBidSize: number;
+    /** Best bid . Ex: `3200.00`. */
+    bestBidPrice: number;
+    /** Best ask size. Ex: `3600.00`. */
+    bestAskPrice: number;
+    /** Best ask. Ex: `284`. */
+    bestAskSize: number;
+    /** Filled time - nanosecond. Ex: `1553846081210004941`. */
+    ts: number;
+  }
+}
+
+export interface KucoinSymbolKlinesEvent {
+  /** Ex: `"message"`. */
+  type: string;
+  /** Ex: `"/market/candles:BTC-USDT_1hour"`. */
+  topic: string;
+  /** Ex: `"trade.candles.update"`. */
+  subject: string;
+  data: {
+    /** symbol. Ex: `"XBTUSDM"`. */
+    symbol: string;
+    candles:[
+      "1589968800",   // Start time of the candle cycle
+      "9786.9",       // open price
+      "9740.8",       // close price
+      "9806.1",       // high price
+      "9732",         // low price
+      "27.45649579",  // Transaction volume
+      "268280.09830877"   // Transaction amount
+    ],
+    /** Ex: `1589970010253893337` */
+    time: number;  // now（us）
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------
 //  Trade Orders
 // ---------------------------------------------------------------------------------------------------
 

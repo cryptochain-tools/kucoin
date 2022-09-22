@@ -28,11 +28,14 @@ const testMarketWs = async () => {
 
     // ws.addListener('message', msg => console.log('message =>', msg));
 
-    const tickerXBTUSDM = ws.symbolTicker('XBTUSDM').subscribe(data => console.log('symbolTicker =>', data));
-    const tickerV2XBTUSDM = ws.symbolTickerV2('XBTUSDM').subscribe(data => console.log('symbolTickerV2 =>', data));
+    // const tickerXBTUSDM = ws.symbolTicker('XBTUSDM').subscribe(data => console.log('symbolTicker =>', data));
+    // const tickerV2XBTUSDM = ws.symbolTickerV2('XBTUSDM').subscribe(data => console.log('symbolTickerV2 =>', data));
+    // const klines = ws.klines('XBTUSDM', '1min').subscribe(data => console.log('klines =>', data));
+    const klines = ws.klines('BTC-USDT', '1min').subscribe(data => console.log('klines =>', data));
     
-    setTimeout(() => { console.log('Test => Unsubscribe XBTUSDM ticker'); tickerXBTUSDM.unsubscribe(); }, 50000);    
-    setTimeout(() => { console.log('Test => Unsubscribe XBTUSDM tickerV2'); tickerV2XBTUSDM.unsubscribe(); }, 2500);    
+    // setTimeout(() => { console.log('Test => Unsubscribe XBTUSDM ticker'); tickerXBTUSDM.unsubscribe(); }, 50000);
+    // setTimeout(() => { console.log('Test => Unsubscribe XBTUSDM tickerV2'); tickerV2XBTUSDM.unsubscribe(); }, 2500);
+    setTimeout(() => { console.log('Test => Unsubscribe XBTUSDM klines'); klines.unsubscribe(); }, 10000);
 
     // setTimeout(() => { console.log('Reconnecting...'); ws.reconnect(); }, 10000);
 

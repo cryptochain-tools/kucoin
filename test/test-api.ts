@@ -18,13 +18,13 @@ const testApi = async () => {
     
     console.log('---------------- API TEST ----------------------');
  
-    const market: KucoinMarketType = 'spot';
-    // const market: KucoinMarketType = 'futures';
+    // const market: KucoinMarketType = 'spot';
+    const market: KucoinMarketType = 'futures';
 
     const options: KucoinApiOptions = {
       ...getApiKeys(market),
       // isTest: true,
-    };
+    } as any;
 
     if (options.isTest) { setTestKeys(options, market); }
 
@@ -82,7 +82,7 @@ const testApi = async () => {
       //  Market (Futures)
       // ---------------------------------------------------------------------------------------------------
 
-      // console.log('getActiveSymbols() =>', await api.getActiveSymbols());
+      console.log('getActiveSymbols() =>', await api.getActiveSymbols());
       
       // console.log('getSymbolInformation(symbol) =>', await api.getSymbolInformation('ENJUSDTM'));
       

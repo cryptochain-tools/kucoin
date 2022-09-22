@@ -324,6 +324,13 @@ export class KucoinWebsocket extends EventEmitter {
     return this.registerTopicSubscription(topic, subject);
   }
 
+  /** {@link https://docs.kucoin.com/spot#klines Klines} */
+  klines(symbol: string, type: string): Subject<KucoinSymbolTickerV2Event> {
+    const topic = `/contractMarket/candles:${symbol}_${type}`;
+    const subject = `trade.candles.update`;
+    return this.registerTopicSubscription(topic, subject);
+  }
+
   // ---------------------------------------------------------------------------------------------------
   //  User (private)
   // ---------------------------------------------------------------------------------------------------
