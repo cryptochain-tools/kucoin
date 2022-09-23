@@ -259,6 +259,11 @@ class KucoinWebsocket extends events_1.default {
         const subject = `tickerV2`;
         return this.registerTopicSubscription(topic, subject);
     }
+    klines(symbol, type) {
+        const topic = `/contractMarket/candles:${symbol}_${type}`;
+        const subject = `trade.candles.update`;
+        return this.registerTopicSubscription(topic, subject);
+    }
     orderUpdate() {
         const topic = `/spotMarket/tradeOrders`;
         const subject = `orderChange`;

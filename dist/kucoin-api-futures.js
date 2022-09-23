@@ -32,6 +32,9 @@ class KucoinApiFutures extends kucoin_api_1.KucoinApi {
             return Promise.reject(results);
         });
     }
+    getKChart(symbol, from, to) {
+        return this.get(`api/v1/kline/query?symbol=${symbol}&granularity=1&from=${from}&to=${to}`, { isPublic: true });
+    }
     getAccountOverview(params) {
         return __awaiter(this, void 0, void 0, function* () {
             const results = yield this.get('api/v1/account-overview', { params });

@@ -1,6 +1,6 @@
 import { KucoinApi } from "./kucoin-api";
 import { KucoinApiOptions, KucoinMarketType } from "./types/kucoin.types";
-import { KucoinSpotListAccountsRequest, KucoinSpotListAccount, KucoinSpotCreateAccountRequest, KucoinSpotCreateAccountResponse, KucoinSpotAccountInformation, KucoinSpotSymbolInformation, KucoinSpotSymbolsInformationRequest, KucoinSpotSymbolKlinesRequest, KucoinSpotSymbolKline, KucoinSpotOrderResponse, KucoinSpotPostOrderRequest, KucoinSpotGetOrdersRequest, KucoinSpotOrder, KucoinSpotCancelAllSymbolOrdersRequest, KucoinSpotCancelAllSymbolOrdersResponse, KucoinSpotAccountBalanceResponse, KucoinSpotUserInfo, KucoinSpotGetFillsRequest, KucoinSpotGetFillsResponse, KucoinSpotOrderFilled } from './types/kucoin-spot.types';
+import { KucoinSpotListAccountsRequest, KucoinSpotListAccount, KucoinSpotCreateAccountRequest, KucoinSpotCreateAccountResponse, KucoinSpotAccountInformation, KucoinSpotSymbolInformation, KucoinSpotSymbolsInformationRequest, KucoinSpotSymbolKlinesRequest, KucoinSpotSymbolKline, KucoinSpotOrderResponse, KucoinSpotPostOrderRequest, KucoinSpotGetOrdersRequest, KucoinSpotOrder, KucoinSpotCancelAllSymbolOrdersRequest, KucoinSpotCancelAllSymbolOrdersResponse, KucoinSpotAccountBalanceResponse, KucoinSpotUserInfo, KucoinSpotGetFillsRequest, KucoinSpotGetFillsResponse, KucoinSpotOrderFilled, KucoinSpotOrderIdResponse } from './types/kucoin-spot.types';
 export declare class KucoinApiSpot extends KucoinApi {
     market: KucoinMarketType;
     constructor(options?: KucoinApiOptions);
@@ -18,8 +18,8 @@ export declare class KucoinApiSpot extends KucoinApi {
     getOrder(orderId: string): Promise<KucoinSpotOrder>;
     getFills(params: KucoinSpotGetFillsRequest): Promise<KucoinSpotGetFillsResponse>;
     getRecentFills(): Promise<KucoinSpotOrderFilled[]>;
-    postOrder(params: KucoinSpotPostOrderRequest): Promise<KucoinSpotOrderResponse>;
-    cancelOrder(orderId: string): Promise<KucoinSpotOrderResponse>;
+    postOrder(params: KucoinSpotPostOrderRequest): Promise<KucoinSpotOrderIdResponse>;
+    cancelOrder(orderId: string): Promise<KucoinSpotOrderIdResponse>;
     cancelAllSymbolOrders(params: KucoinSpotCancelAllSymbolOrdersRequest): Promise<KucoinSpotCancelAllSymbolOrdersResponse>;
 }
 //# sourceMappingURL=kucoin-api-spot.d.ts.map

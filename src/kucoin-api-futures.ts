@@ -58,6 +58,11 @@ export class KucoinApiFutures extends KucoinApi {
     return Promise.reject(results);
   }
 
+  /** {@link https://docs.kucoin.com/futures/#k-chart Get K Line Data of Contract} */
+  getKChart(symbol: string, from: number, to: number): Promise<any> {
+    return this.get(`api/v1/kline/query?symbol=${symbol}&granularity=1&from=${from}&to=${to}`, { isPublic: true });
+  }
+
 
   // ---------------------------------------------------------------------------------------------------
   //  Account

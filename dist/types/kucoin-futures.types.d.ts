@@ -156,8 +156,8 @@ export interface KucoinFuturesGetOrderRequest {
 export interface KucoinFuturesOrder {
     id: string;
     symbol: string;
-    type: string;
-    side: string;
+    type: KucoinOrderType;
+    side: KucoinOrderSide;
     price: string;
     size: number;
     value: string;
@@ -191,6 +191,21 @@ export interface KucoinFuturesOrder {
     filledValue: number;
     reduceOnly: boolean;
 }
+export interface KucoinFuturesGetFillsRequest {
+    orderId?: string;
+    symbol?: string;
+    side?: KucoinOrderSide;
+    type?: KucoinOrderType;
+    startAt?: number;
+    endAt?: number;
+}
+export interface KucoinFuturesGetFillsResponse {
+    currentPage: number;
+    pageSize: number;
+    totalNum: number;
+    totalPage: number;
+    items: KucoinFuturesOrderFilled[];
+}
 export interface KucoinFuturesOrderFilled {
     symbol: string;
     tradeId: string;
@@ -211,21 +226,6 @@ export interface KucoinFuturesOrderFilled {
     createdAt: number;
     settleCurrency: string;
     tradeTime: number;
-}
-export interface KucoinFuturesGetFillsRequest {
-    orderId?: string;
-    symbol?: string;
-    side?: KucoinOrderSide;
-    type?: KucoinOrderType;
-    startAt?: number;
-    endAt?: number;
-}
-export interface KucoinFuturesGetFillsResponse {
-    currentPage: number;
-    pageSize: number;
-    totalNum: number;
-    totalPage: number;
-    items: KucoinFuturesOrderFilled[];
 }
 export interface KucoinFuturesPostOrderRequest {
     clientOid: string;

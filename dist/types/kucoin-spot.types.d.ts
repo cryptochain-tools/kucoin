@@ -132,6 +132,22 @@ export interface KucoinSpotOrder {
     createdAt: number;
     tradeType: KucoinTradeType;
 }
+export interface KucoinSpotGetFillsRequest {
+    orderId?: string;
+    symbol?: string;
+    side?: KucoinOrderSide;
+    type?: KucoinOrderType;
+    startAt?: number;
+    endAt?: number;
+    tradeType: KucoinTradeType;
+}
+export interface KucoinSpotGetFillsResponse {
+    currentPage: number;
+    pageSize: number;
+    totalNum: number;
+    totalPage: number;
+    items: KucoinSpotOrderFilled[];
+}
 export interface KucoinSpotOrderFilled {
     symbol: string;
     tradeId: string;
@@ -150,27 +166,11 @@ export interface KucoinSpotOrderFilled {
     createdAt: number;
     tradeType: KucoinTradeType;
 }
-export interface KucoinSpotGetFillsRequest {
-    orderId?: string;
-    symbol?: string;
-    side?: KucoinOrderSide;
-    type?: KucoinOrderType;
-    startAt?: number;
-    endAt?: number;
-    tradeType: KucoinTradeType;
-}
-export interface KucoinSpotGetFillsResponse {
-    currentPage: number;
-    pageSize: number;
-    totalNum: number;
-    totalPage: number;
-    items: KucoinSpotOrderFilled[];
-}
 export interface KucoinSpotPostOrderRequest {
     clientOid: string;
     side: KucoinOrderSide;
     symbol: string;
-    type?: string;
+    type?: KucoinOrderType;
     remark?: string;
     stp?: string;
     tradeType?: KucoinTradeType;
@@ -184,7 +184,7 @@ export interface KucoinSpotPostOrderRequest {
     visibleSize?: string;
     funds?: string;
 }
-export interface KucoinSpotOrderResponse {
+export interface KucoinSpotOrderIdResponse {
     orderId: string;
 }
 export interface KucoinSpotCancelAllSymbolOrdersRequest {

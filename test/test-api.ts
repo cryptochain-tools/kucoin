@@ -1,3 +1,5 @@
+import moment from 'moment';
+import { interval } from 'rxjs';
 import * as fs from 'fs';
 
 import { KucoinApiSpot } from '../src/kucoin-api-spot';
@@ -82,11 +84,18 @@ const testApi = async () => {
       //  Market (Futures)
       // ---------------------------------------------------------------------------------------------------
 
-      console.log('getActiveSymbols() =>', await api.getActiveSymbols());
+      // console.log('getActiveSymbols() =>', await api.getActiveSymbols());
       
       // console.log('getSymbolInformation(symbol) =>', await api.getSymbolInformation('ENJUSDTM'));
       
       // console.log('getSymbolPriceTicker({ symbol }) =>', await api.getSymbolPriceTicker({ symbol: 'BNBUSDTM' }).catch(err => { throw err; }));
+
+      interval(1000).subscribe(async () => {
+        const startTime = moment().subtract(2, 'minutes').unix() * 1000;
+        const endTime = moment().unix() * 1000;
+        console.log('getKChart() =>', await api.getKChart('XBTUSDM', startTime, endTime));
+      });
+
 
       // ---------------------------------------------------------------------------------------------------
       //  Account (Spot)

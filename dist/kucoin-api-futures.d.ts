@@ -8,6 +8,7 @@ export declare class KucoinApiFutures extends KucoinApi {
     getActiveSymbols(): Promise<KucoinFuturesSymbolInformation[]>;
     getSymbolInformation(symbol: string): Promise<KucoinFuturesSymbolInformation>;
     getSymbolPriceTicker(params: KucoinFuturesSymbolRequest): Promise<KucoinFuturesSymbolPriceTicker>;
+    getKChart(symbol: string, from: number, to: number): Promise<any>;
     getAccountOverview(params?: KucoinFuturesAccountOverviewRequest): Promise<KucoinFuturesAccountOverview>;
     getPositions(): Promise<KucoinFuturesPosition>;
     getPosition(params: KucoinFuturesSymbolRequest): Promise<KucoinFuturesPosition>;

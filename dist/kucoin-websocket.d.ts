@@ -46,6 +46,7 @@ export declare class KucoinWebsocket extends EventEmitter {
     protected discoverEventType(data: any): WsStreamEmitterType;
     symbolTicker(symbol: string): Subject<KucoinSymbolTickerEvent>;
     symbolTickerV2(symbol: string): Subject<KucoinSymbolTickerV2Event>;
+    klines(symbol: string, type: string): Subject<KucoinSymbolTickerV2Event>;
     orderUpdate(): Subject<KucoinTradeOrdersEvent>;
     balanceUpdate(): Subject<KucoinAvailableBalanceEvent>;
     withdrawHold(): Subject<KucoinWithdrawalHoldEvent>;

@@ -1,6 +1,6 @@
 {
   "name": "@metacodi/kucoin",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Kucoin API Client",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -33,6 +33,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "isomorphic-ws": "^4.0.1",
+    "moment": "^2.29.4",
     "rxjs": "^7.5.2",
     "ws": "^8.4.2"
   },

@@ -52,6 +52,36 @@ export interface KucoinSymbolTickerV2Event {
         ts: number;
     };
 }
+export interface KucoinSymbolTickerV2Event {
+    subject: string;
+    topic: string;
+    data: {
+        symbol: string;
+        bestBidSize: number;
+        bestBidPrice: number;
+        bestAskPrice: number;
+        bestAskSize: number;
+        ts: number;
+    };
+}
+export interface KucoinSymbolKlinesEvent {
+    type: string;
+    topic: string;
+    subject: string;
+    data: {
+        symbol: string;
+        candles: [
+            "1589968800",
+            "9786.9",
+            "9740.8",
+            "9806.1",
+            "9732",
+            "27.45649579",
+            "268280.09830877"
+        ];
+        time: number;
+    };
+}
 export interface KucoinTradeOrdersEvent {
     type: string;
     topic: string;
