@@ -6,6 +6,7 @@ Implemented by METACODI, S.L.
 
 - [API documentation](https://docs.kucoin.com/).
 - Generate [API Key](https://www.kucoin.com/es/account/api/create?type=trade).
+- [Web site](https://www.kucoin.com)
 
 <br />
 <br />
