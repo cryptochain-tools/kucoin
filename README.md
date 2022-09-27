@@ -4,9 +4,8 @@ Kucoin API Client
 
 Implemented by METACODI, S.L.
 
-Visit [Kucoin API Documentation](https://docs.kucoin.com/).
-
-Generate [Kucoin API Key](https://www.kucoin.com/es/account/api/create?type=trade).
+- [API documentation](https://docs.kucoin.com/).
+- Generate [API Key](https://www.kucoin.com/es/account/api/create?type=trade).
 
 <br />
 <br />
