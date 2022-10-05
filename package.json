@@ -1,6 +1,6 @@
 {
   "name": "@metacodi/kucoin",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Kucoin API Client",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -31,14 +31,15 @@
   "homepage": "https://github.com/metacodi/kucoin#readme",
   "license": "ISC",
   "peerDependencies": {
-    "@metacodi/abstract-exchange": "^1.0.8",
-    "@metacodi/node-utils": "^1.0.15",
+    "@metacodi/abstract-exchange": "^1.0.16",
+    "@metacodi/node-utils": "^1.0.16",
     "axios": "^0.24.0",
     "isomorphic-ws": "^4.0.1",
     "rxjs": "~6.6.0",
     "ws": "^8.4.2"
   },
   "devDependencies": {
+    "@types/ftp": "^0.3.33",
     "@types/node": "^18.7.23",
     "@types/ws": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
