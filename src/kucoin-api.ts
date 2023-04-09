@@ -20,6 +20,7 @@ export abstract class KucoinApi {
   constructor(
     options?: KucoinApiOptions,
   ) {
+    // @ts-ignore
     this.options = { ...this.defaultOptions, ...options };
   }
 
@@ -35,6 +36,7 @@ export abstract class KucoinApi {
   
   get apiPassphrase(): string { return this.options?.apiPassphrase; }
   
+     // @ts-ignore
   get isTest(): boolean { return this.options?.isTest; }
   
   get defaultOptions(): Partial<KucoinApiOptions> {
@@ -77,7 +79,7 @@ export abstract class KucoinApi {
     const baseUrl = options.baseUrlOverride || this.baseUrl();
     const [uri, _query = ''] = endpoint.split('?');
 
-    const config: AxiosRequestConfig<any> = {
+    const config:any = {
       method,
       // url: 'https://' + [baseUrl, endpoint].join('/'),
       headers: { ...headers as any},
@@ -103,7 +105,6 @@ export abstract class KucoinApi {
     
     config.url = 'https://' + [baseUrl, endpoint].join('/');
 
-    console.log(config);
     
     return axios(config).then(response => {
       // console.log(config.url, response);
@@ -206,7 +207,7 @@ export abstract class KucoinApi {
     return Buffer.from(signature).toString('base64');
   };
 
-  protected parseException(e: AxiosError, url: string): unknown {
+  protected parseException(e: any, url: string): unknown {
     const { response, request, message } = e;
     // Si no hem rebut una resposta...
     if (!response) { throw request ? e : message; }

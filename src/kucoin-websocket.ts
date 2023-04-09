@@ -119,14 +119,14 @@ export class KucoinWebsocket extends EventEmitter {
       console.log(this.wsId, '=> connecting...', url);
       this.ws = new WebSocket(url);
       // Listeners.
-      this.ws.onopen = event => this.onWsOpen(event);
-      this.ws.onerror = event => this.onWsError(event);
-      this.ws.onclose = event => this.onWsClose(event);
-      this.ws.onmessage = event => this.onWsMessage(event);
+      this.ws.onopen = (event: any) => this.onWsOpen(event);
+      this.ws.onerror = (event: any) => this.onWsError(event);
+      this.ws.onclose = (event: any) => this.onWsClose(event);
+      this.ws.onmessage = (event: any) => this.onWsMessage(event);
       // ping . pong
       if (typeof this.ws.on === 'function') {
-        this.ws.on('ping', event => this.onWsPing(event));
-        this.ws.on('pong', event => this.onWsPong(event));
+        this.ws.on('ping', (event: any) => this.onWsPing(event));
+        this.ws.on('pong', (event: any) => this.onWsPong(event));
       }
       // Not sure these work in the browser, the traditional event listeners are required for ping/pong frames in node.
       (this.ws as any).onping = (event: WebSocket.Event) => this.onWsPing(event);
@@ -439,7 +439,7 @@ export class KucoinWebsocket extends EventEmitter {
     const id = ++this.subscriptionId;
     const data: KucoinTopicSubscription = { type: "subscribe", id, topic, response: true };
     if (subject) { data.subject = subject; }
-    this.ws.send(JSON.stringify(data), error => error ? this.onWsError(error as any) : undefined);
+    this.ws.send(JSON.stringify(data), (error: any) => error ? this.onWsError(error as any) : undefined);
   }
 
   protected unsubscribeTopic(topic: string, subject?: string) {
@@ -447,7 +447,7 @@ export class KucoinWebsocket extends EventEmitter {
     const id = ++this.subscriptionId;
     const data: KucoinTopicSubscription = { type: "unsubscribe", id, topic, response: true };
     if (subject) { data.subject = subject; }
-    this.ws.send(JSON.stringify(data), error => error ? this.onWsError(error as any) : undefined);
+    this.ws.send(JSON.stringify(data), (error: any) => error ? this.onWsError(error as any) : undefined);
   }
 
 

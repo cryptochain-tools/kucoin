@@ -1,25 +1,41 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "lib": ["es2018", "DOM"],
+    "target": "es2017",
+    "lib": [
+      "dom",
+      "es6",
+      "es2017",
+      "esnext.asynciterable"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
+    "skipLibCheck": true,
     "allowJs": true,
     "outDir": "./dist/",
     "rootDir": "src",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "resolveJsonModule": false,
-    "strictNullChecks": false,
     "removeComments": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "strict": true,
+    
+
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
   },
+  "include": [
+    "./src/**/*.ts"
+  ],
   "exclude": [
     "dist",
     "test",
