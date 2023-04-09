@@ -59,19 +59,19 @@ export class KucoinWebsocket extends EventEmitter {
 
   get streamType(): WsStreamType { return this.options?.streamType; }
 
-  get apiKey(): string { return this.options?.apiKey; }
+  get apiKey(): string | undefined { return this.options?.apiKey; }
 
-  get apiSecret(): string { return this.options?.apiSecret; }
+  get apiSecret(): string | undefined { return this.options?.apiSecret; }
   
-  get apiPassphrase(): string { return this.options?.apiPassphrase; }
+  get apiPassphrase(): string | undefined { return this.options?.apiPassphrase; }
 
-  get isTest(): boolean { return this.options?.isTest; }
+  get isTest(): boolean | undefined { return this.options?.isTest; }
 
-  get reconnectPeriod(): number { return this.options?.reconnectPeriod; }
+  get reconnectPeriod(): number | undefined { return this.options?.reconnectPeriod; }
 
-  get pingInterval(): number { return this.options?.pingInterval; }
+  get pingInterval(): number | undefined { return this.options?.pingInterval; }
 
-  get pongTimeout(): number { return this.options?.pongTimeout; }
+  get pongTimeout(): number | undefined { return this.options?.pongTimeout; }
 
   get defaultOptions(): Partial<KucoinWebsocketOptions> {
     return {
@@ -285,7 +285,7 @@ export class KucoinWebsocket extends EventEmitter {
     return event?.data ? JSON.parse(event.data) : event;
   }
 
-  protected discoverEventType(data: any): WsStreamEmitterType {
+  protected discoverEventType(data: any): WsStreamEmitterType | undefined {
     const obj = Array.isArray(data) ? (data.length ? data[0] : undefined) : data;
     if (typeof obj === 'object') {
       if (Object.keys(obj).length === 2 && obj.hasOwnProperty('id') && obj.hasOwnProperty('type')) {

@@ -13,11 +13,11 @@ export interface KucoinApiCredentials {
 
 export interface KucoinApiOptions {
   /** Public user api key. */
-  apiKey: string;
+  apiKey: string  | undefined;
   /** Private user api key. */
-  apiSecret: string;
+  apiSecret: string  | undefined;
   /** User api passphrase. */
-  apiPassphrase: string;
+  apiPassphrase: string  | undefined;
   /** Indica si l'api està en mode test o en real. */
   isTest?: boolean,
   // /** Override the max size of the request window (in ms). */

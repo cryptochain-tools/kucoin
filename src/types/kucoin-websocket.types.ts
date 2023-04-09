@@ -1,4 +1,4 @@
-import { KucoinApiCredentials, KucoinMarketType, KucoinOrderSide } from "./kucoin.types";
+import {  KucoinMarketType, KucoinOrderSide } from "./kucoin.types";
 
 
 export type WsConnectionState = 'initial' | 'connecting' | 'connected' | 'reconnecting' | 'closing';

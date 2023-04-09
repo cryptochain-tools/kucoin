@@ -30,11 +30,11 @@ export abstract class KucoinApi {
   // ---------------------------------------------------------------------------------------------------
 
   /** {@link https://www.kucoin.com/es/account/api/create?type=trade Create API Keys} */
-  get apiKey(): string { return this.options?.apiKey; }
+  get apiKey(): string | undefined { return this.options?.apiKey; }
   
-  get apiSecret(): string { return this.options?.apiSecret; }
+  get apiSecret(): string | undefined { return this.options?.apiSecret; }
   
-  get apiPassphrase(): string { return this.options?.apiPassphrase; }
+  get apiPassphrase(): string | undefined { return this.options?.apiPassphrase; }
   
      // @ts-ignore
   get isTest(): boolean { return this.options?.isTest; }
@@ -149,9 +149,10 @@ export abstract class KucoinApi {
     const data = (method === 'GET' || method === 'DELETE') ? this.formatQuery(params) : JSON.stringify(params).slice(1, -1);
     const message = timestamp + method + endpoint + data;
     // console.log('message =>', message);
-    const signature = await this.signMessage(message, apiSecret);
+    const signature = await this.signMessage(message, apiSecret as string);
     const headers: { [header: string]: number | string } = {
       // 'User-Agent': `KuCoin-Node-SDK/${version}`,
+      // @ts-ignore
       'KC-API-KEY': apiKey,
       'KC-API-SIGN': signature,
       'KC-API-TIMESTAMP': timestamp.toString(),
@@ -159,7 +160,7 @@ export abstract class KucoinApi {
     };
     if (authVersion && (authVersion === 2 || authVersion === '2')) { // for v2 API-KEY
       headers['KC-API-KEY-VERSION'] = 2;
-      const passprhase = await this.signMessage(apiPassphrase || '', apiSecret);
+      const passprhase = await this.signMessage(apiPassphrase || '', apiSecret as string);
       headers['KC-API-PASSPHRASE'] = passprhase;
     }
     return headers;

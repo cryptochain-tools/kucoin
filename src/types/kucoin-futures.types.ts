@@ -1,4 +1,4 @@
-import { KucoinOrderSide, KucoinOrderTimeInForce, KucoinOrderType, KucoinStopOrderType, KucoinTradeType } from "./kucoin.types";
+import { KucoinOrderSide, KucoinOrderTimeInForce, KucoinOrderType, KucoinStopOrderType } from "./kucoin.types";
 
 
 // ---------------------------------------------------------------------------------------------------
